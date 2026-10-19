@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Azizam</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6fb;
+    padding:20px;
+}
+
+.container{
+    max-width:700px;
+    margin:auto;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+button{
+    width:100%;
+    padding:15px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    font-size:18px;
+}
+
+#question{
+    font-size:30px;
+    font-weight:bold;
+    text-align:center;
+    margin:25px 0;
+}
+
+input{
+    width:100%;
+    padding:15px;
+    font-size:20px;
+    box-sizing:border-box;
+}
+
+.good{
+    color:green;
+    font-weight:bold;
+}
+
+.bad{
+    color:red;
+    font-weight:bold;
+}
+
+h1{
+    text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="card" id="menu">
+
+<h1>🍅 Azizam</h1>
+
+<button onclick="startSet('words')">
+📚 Words to know
+</button>
+
+<button onclick="startSet('phrases')">
+💬 Phrases
+</button>
+
+<button onclick="startSet('grammar')">
+⭐ Grammar
+</button>
+
+</div>
+
+<div class="card" id="quiz" style="display:none;">
+
+<div id="score">
+Score: 0 / 0
+</div>
+
+<div id="question"></div>
+
+<input id="answer" autocomplete="off">
+
+<button onclick="checkAnswer()">
+Controleer
+</button>
+
+<button onclick="practiceMistakes()">
+🔄 Alleen fouten oefenen
+</button>
+
+<div id="feedback"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const sets = {
+
+words: [
+
+["tomato","tomaat"],
+["carrot","wortel"],
+["pepper","paprika"],
+["lettuce","sla"],
+["cucumber","komkommer"],
+["beef","rundvlees"],
+["chicken","kip"],
+["cheese","kaas"],
+
+["crunchy","knapperig"],
+["sweet","zoet"],
+["sour","zuur"],
+["soft","zacht"],
+["hard","hard"],
+["creamy","romig"],
+["spicy","pittig"],
+["greasy","vettig"],
+
+["smelly","stinkend"],
+["meatballs","gehaktballetjes"],
+["mashed potatoes","aardappelpuree"],
+["boil","koken"],
+["bake","bakken"],
+["cut","snijden"],
+["piece","stukje"]
+
+],
+
+phrases: [
+
+["You can fill tacos with beef or chicken.","Je kunt taco's vullen met rundvlees of kip."],
+
+["Most pizzas have a crunchy crust.","De meeste pizza's hebben een knapperige korst."],
+
+["To make pancakes you need milk, butter and flour.","Om pannenkoeken te maken heb je melk, boter en meel nodig."],
+
+["This green salad has lettuce, cucumber and a lemon dressing.","In deze groene salade zit sla, komkommer en een dressing met citroen."],
+
+["You can eat it with your hands.","Je kunt het met je handen eten."],
+
+["It tastes delicious.","Het smaakt heerlijk."],
+
+["It is very healthy.","Het is heel gezond."],
+
+["Everyone likes it.","Iedereen vindt het lekker."],
+
+["You can eat it with different vegetables.","Je kunt het met verschillende groenten eten."]
+
+],
+
+grammar: [
+
+["It is red and a bit sour.","Het is rood en een beetje zuur."],
+
+["It is not hard.","Het is niet hard."],
+
+["They are orange and crunchy.","Ze zijn oranje en knapperig."],
+
+["They are not sour.","Ze zijn niet zuur."],
+
+["It's","Het is"],
+
+["It's not","Het is niet"],
+
+["They're","Ze zijn"],
+
+["They're not","Ze zijn niet"]
+
+]
+
+};
+
+let currentSet = [];
+let currentQuestion = null;
+let mistakes = [];
+let good = 0;
+let total = 0;
+
+function startSet(setName){
+
+    currentSet = [...sets[setName]];
+    mistakes = [];
+    good = 0;
+    total = 0;
+
+    document.getElementById("menu").style.display="none";
+    document.getElementById("quiz").style.display="block";
+
+    nextQuestion();
+}
+
+function nextQuestion(){
+
+    if(currentSet.length === 0){
+
+        document.getElementById("question").innerHTML =
+        "🎉 Klaar!";
+
+        return;
+    }
+
+    const index = Math.floor(
+        Math.random() * currentSet.length
+    );
+
+    const pair =
+        currentSet.splice(index,1)[0];
+
+    const reverse =
+        Math.random() < 0.5;
+
+    currentQuestion = {
+
+        ask: reverse ? pair[1] : pair[0],
+        answer: reverse ? pair[0] : pair[1],
+        original: pair
+
+    };
+
+    document.getElementById("question")
+    .textContent = currentQuestion.ask;
+
+    document.getElementById("answer").value="";
+    document.getElementById("feedback").innerHTML="";
+}
+
+function checkAnswer(){
+
+    const answer =
+        document.getElementById("answer")
+        .value
+        .trim()
+        .toLowerCase();
+
+    total++;
+
+    if(
+        answer ===
+        currentQuestion.answer.toLowerCase()
+    ){
+
+        good++;
+
+        document.getElementById("feedback")
+        .innerHTML =
+        "<div class='good'>✅ Goed!</div>";
+
+    }else{
+
+        mistakes.push(
+            currentQuestion.original
+        );
+
+        document.getElementById("feedback")
+        .innerHTML =
+        "<div class='bad'>❌ Fout<br>Juiste antwoord: "
+        + currentQuestion.answer +
+        "</div>";
+    }
+
+    document.getElementById("score")
+    .innerHTML =
+    "Score: " + good + " / " + total;
+
+    setTimeout(nextQuestion,1500);
+}
+
+function practiceMistakes(){
+
+    if(mistakes.length===0){
+
+        alert("Geen fouten gemaakt 🎉");
+        return;
+    }
+
+    currentSet = [...mistakes];
+    mistakes = [];
+
+    nextQuestion();
+}
+
+document
+.getElementById("answer")
+.addEventListener("keydown",function(e){
+
+    if(e.key==="Enter"){
+        checkAnswer();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
