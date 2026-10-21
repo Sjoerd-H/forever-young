@@ -116,8 +116,9 @@ Controleer
 
 <script>
 
-const sets = {
 const songNaam = "Nice To Meet You";
+
+const sets = {    
     
 words: [
 
@@ -191,6 +192,8 @@ function startSet(setName){
 
     document.getElementById("menu").style.display="none";
     document.getElementById("quiz").style.display="block";
+
+    document.getElementById("answer").style.display="block";
 
     nextQuestion();
 }
