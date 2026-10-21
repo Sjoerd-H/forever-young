@@ -70,7 +70,7 @@ h1{
 
 <div class="card" id="menu">
 
-<h1>🍅 Nice to Meet you</h1>
+<h1>👋 Nice To Meet You</h1>
 
 <button onclick="startSet('words')">
 📚 Words to know
@@ -192,13 +192,48 @@ function startSet(setName){
 
 function nextQuestion(){
 
-    if(currentSet.length === 0){
+   if(currentSet.length === 0){
 
-        document.getElementById("question").innerHTML =
-        "🎉 Klaar!";
+    const totaalWoorden =
+        good + mistakes.length;
 
-        return;
+    const foutenAantal =
+        mistakes.length;
+
+    const percentage =
+        Math.round(
+            (good / totaalWoorden) * 100
+        );
+
+    let sterren = "⭐";
+
+    if(percentage >= 80){
+        sterren = "⭐⭐";
     }
+
+    if(percentage === 100){
+        sterren = "⭐⭐⭐";
+    }
+
+    document.getElementById("question").innerHTML = `
+        🎉 Klaar!
+        <br><br>
+        ${totaalWoorden} woorden geleerd
+        <br><br>
+        ${foutenAantal} fouten gemaakt tijdens het oefenen
+        <br><br>
+        Eindscore: ${percentage}%
+        <br><br>
+        ${sterren}
+    `;
+
+    document.getElementById("answer").style.display = "none";
+
+    document.getElementById("feedback").innerHTML = "";
+
+    return;
+}
+
 
     const index = Math.floor(
         Math.random() * currentSet.length
