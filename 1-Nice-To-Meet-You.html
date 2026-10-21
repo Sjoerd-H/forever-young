@@ -104,6 +104,10 @@ Controleer
 🔄 Alleen fouten oefenen
 </button>
 
+<button onclick="goBack()">
+🏠 Terug naar Songs
+</button>
+    
 <div id="feedback"></div>
 
 </div>
@@ -113,7 +117,8 @@ Controleer
 <script>
 
 const sets = {
-
+const songNaam = "Nice To Meet You";
+    
 words: [
 
 ["colour","kleur"],
@@ -215,6 +220,11 @@ function nextQuestion(){
         sterren = "⭐⭐⭐";
     }
 
+localStorage.setItem(
+    songNaam,
+    sterren
+);
+       
     document.getElementById("question").innerHTML = `
         🎉 Klaar!
         <br><br>
@@ -315,6 +325,10 @@ function practiceMistakes(){
     nextQuestion();
 }
 
+function goBack(){
+    window.location.href = "index.html";
+}
+    
 document
 .getElementById("answer")
 .addEventListener("keydown",function(e){
